@@ -557,26 +557,52 @@ void MyTcpServer::infRegHandle(QString messagetype, QString registertype, QStrin
         QThread *thread = socketThreadHash.value(handle);
         QString teacher_username = userThreadHash.value(thread);
         qDebug() << "teacher_username" << teacher_username;
-        query.prepare("SELECT qn.questionnaire_id, qn.title, sa.student_username, st.name AS student_name, qq.question_type, qq.question_id, sa.answer, "
-                       "CASE "
-                           "WHEN qq.question_type = 'MultipleChoice' THEN mc.content "
-                           "WHEN qq.question_type = 'FillInTheBlank' THEN fib.content "
-                           "WHEN qq.question_type = 'TrueOrFalse' THEN tof.content "
-                           "WHEN qq.question_type = 'Discussion' THEN dis.content "
-                           "ELSE NULL "
-                       "END AS content "
-                       "FROM Questionnaire qn "
-                       "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
-                       "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
-                       "JOIN Student st ON sa.student_username = st.username "
-                       "LEFT JOIN MultipleChoice mc ON qq.question_type = 'MultipleChoice' AND qq.question_id = mc.question_id "
-                       "LEFT JOIN FillInTheBlank fib ON qq.question_type = 'FillInTheBlank' AND qq.question_id = fib.question_id "
-                       "LEFT JOIN TrueOrFalse tof ON qq.question_type = 'TrueOrFalse' AND qq.question_id = tof.question_id "
-                       "LEFT JOIN Discussion dis ON qq.question_type = 'Discussion' AND qq.question_id = dis.question_id "
-                       "WHERE qn.teacher_username = :teacher_username "
-                       "ORDER BY qn.questionnaire_id, sa.student_username, qq.question_type, qq.question_id;");
-
+        query.prepare("SELECT qn.questionnaire_id, qn.title, sa.student_username, st.name AS student_name, qq.question_type, qq.question_id, sa.answer AS student_answer, "
+                              "CASE "
+                              "WHEN qq.question_type = 'MultipleChoice' THEN mc.content "
+                              "WHEN qq.question_type = 'FillInTheBlank' THEN fib.content "
+                              "WHEN qq.question_type = 'TrueOrFalse' THEN tof.content "
+                              "WHEN qq.question_type = 'Discussion' THEN dis.content "
+                              "ELSE NULL "
+                              "END AS content, "
+                              "CASE "
+                              "WHEN qq.question_type = 'MultipleChoice' THEN CONCAT(mc.option_a, '|', mc.option_b, '|', mc.option_c, '|', mc.option_d) "
+                              "ELSE NULL "
+                              "END AS options, "
+                              "CASE "
+                              "WHEN qq.question_type = 'MultipleChoice' THEN mc.answer "
+                              "WHEN qq.question_type = 'FillInTheBlank' THEN fib.answer "
+                              "WHEN qq.question_type = 'TrueOrFalse' THEN tof.answer "
+                              "WHEN qq.question_type = 'Discussion' THEN NULL "
+                              "ELSE NULL "
+                              "END AS answer, "
+                              "total_students.total_count AS total_students, "
+                              "completed_students.completed_count AS completed_students "
+                              "FROM Questionnaire qn "
+                              "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
+                              "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
+                              "JOIN Student st ON sa.student_username = st.username "
+                              "LEFT JOIN MultipleChoice mc ON qq.question_type = 'MultipleChoice' AND qq.question_id = mc.question_id "
+                              "LEFT JOIN FillInTheBlank fib ON qq.question_type = 'FillInTheBlank' AND qq.question_id = fib.question_id "
+                              "LEFT JOIN TrueOrFalse tof ON qq.question_type = 'TrueOrFalse' AND qq.question_id = tof.question_id "
+                              "LEFT JOIN Discussion dis ON qq.question_type = 'Discussion' AND qq.question_id = dis.question_id "
+                              "JOIN (SELECT qn.questionnaire_id, COUNT(DISTINCT sa.student_username) AS total_count "
+                              "FROM Questionnaire qn "
+                              "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
+                              "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
+                              "WHERE qn.teacher_username = :teacher_username "
+                              "GROUP BY qn.questionnaire_id) AS total_students ON qn.questionnaire_id = total_students.questionnaire_id "
+                              "JOIN (SELECT qn.questionnaire_id, COUNT(DISTINCT sa.student_username) AS completed_count "
+                              "FROM Questionnaire qn "
+                              "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
+                              "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
+                              "WHERE qn.teacher_username = :teacher_username AND sa.answer IS NOT NULL "
+                              "GROUP BY qn.questionnaire_id) AS completed_students ON qn.questionnaire_id = completed_students.questionnaire_id "
+                              "WHERE qn.teacher_username = :teacher_username "
+                              "ORDER BY qn.questionnaire_id, FIELD(qq.question_type, 'MultipleChoice', 'FillInTheBlank', 'TrueOrFalse', 'Discussion'), qq.question_id, sa.student_username;");
         query.bindValue(":teacher_username", teacher_username);
+
+
     }
 
     if (query.exec())   {
@@ -624,5 +650,4 @@ void MyTcpServer::onlineHandle(qintptr handle)   {
     qDebug() <<"注销成功";
     database::quitConnection();
 }
-
 
