@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <QReadWriteLock>
 #include <QObject>
 #include <QTcpServer>
 #include "sqlbusiness.h"
@@ -43,4 +44,5 @@ protected slots:
     void mulTableInsertHandle(QString value1, QString value2, QString value3, qintptr handle, QString messageType);
 private:
 	USERTYPE m_userType;
+    QReadWriteLock dbLock;
 };

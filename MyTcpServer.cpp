@@ -51,6 +51,8 @@ void MyTcpServer::loginHandle(QString usertype, QString username, QString passwo
     query.prepare(qs);
     query.bindValue(":username", username);
     query.bindValue(":password", password);
+
+    QReadLocker locker(&dbLock);
     if (!query.exec()) {
         qDebug() << query.lastError().text();   //输出错误信息
         bool state = false;
@@ -101,6 +103,8 @@ void MyTcpServer::mulTableInsertHandle(QString value1, QString value2, QString v
     query.prepare("INSERT INTO Questionnaire (title, teacher_username) VALUES (:title, :teacher_username)");
         query.bindValue(":title", value2);
         query.bindValue(":teacher_username", username);
+
+        QWriteLocker locker(&dbLock);
         if (!query.exec())  {
             bool state = false;
             QString errorText = "插入失败原因:" + query.lastError().text();
@@ -161,7 +165,7 @@ void MyTcpServer::questionUpdateHandle(QString tableName, QString fieldNames, QS
 
 
     qDebug() << "updateSql" << updateSql;
-
+    QWriteLocker locker(&dbLock);
     if (!query.exec(updateSql)) {
         bool state = false;
         QString errorText = "更新失败原因: " + query.lastError().text();
@@ -198,6 +202,7 @@ void MyTcpServer::qqInsertHandle(QString messagetype, QString fieldNames, QStrin
     QString queryString = QString("SELECT * FROM Student WHERE class = '%1'").arg(targetClass);
     query.prepare(queryString);
 
+    QWriteLocker locker(&dbLock);
     if (query.exec()) {
         while (query.next()) {
             QString studentUsername = query.value("username").toString();
@@ -296,6 +301,7 @@ void MyTcpServer::studentAnswerHandle(QString messagetype, QString fieldNames, Q
         query.bindValue(":student_username", student_username);
         query.bindValue(":qq_id", qq_id.toInt());
 
+        QWriteLocker locker(&dbLock);
         if (!query.exec()) {
             bool state = false;
             QString errorText = "提交失败原因:" + query.lastError().text();
@@ -345,6 +351,7 @@ void MyTcpServer::questionInsertHandle(QString messagetype, QString fieldNames, 
     qDebug() <<"columns" << columns << "values" << values;
     QString insertSql = "INSERT INTO " + messagetype + " " + columns + " " + values;
 
+    QWriteLocker locker(&dbLock);
     if (!query.exec(insertSql)) {
         bool state = false;
         QString errorText = "插入失败原因:" + query.lastError().text();
@@ -379,6 +386,8 @@ void MyTcpServer::questionDelectHandle(QString messagetype, QString registertype
         qDebug() << fieldNameList.at(i).toInt();
         if (!fieldNameList.at(i).isEmpty() && !fieldValueList.at(i).isEmpty())  {
         QString deleteFromQuestionnaireSql = QString("DELETE FROM questionnairequestion WHERE question_id = %1 AND question_type = '%2'").arg(fieldNameList.at(i).toInt()).arg(fieldValueList.at(i));
+
+            QWriteLocker locker(&dbLock);
         if (!query.exec(deleteFromQuestionnaireSql)) {
             bool state = false;
             QString errorText = "删除失败原因:" + query.lastError().text();
@@ -436,6 +445,8 @@ void MyTcpServer::delectHandle(QString messagetype, QString registertype, QStrin
                     .arg(fieldNameList.at(i));
             query.prepare(deleteSql);
             query.bindValue(":information", fieldValueList.at(i));
+
+            QWriteLocker locker(&dbLock);
             if (!query.exec()) {
                 bool state = false;
                 QString errorText = "删除失败原因:" + query.lastError().text();
@@ -605,6 +616,7 @@ void MyTcpServer::infRegHandle(QString messagetype, QString registertype, QStrin
 
     }
 
+    QReadLocker locker(&dbLock);
     if (query.exec())   {
         int rowCount = 0;
         while (query.next()) {
