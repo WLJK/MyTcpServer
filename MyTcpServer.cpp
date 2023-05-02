@@ -115,6 +115,8 @@ void MyTcpServer::mulTableInsertHandle(QString value1, QString value2, QString v
             emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
 
             qDebug() << query.lastError().text();
+            QByteArray last = "@@@DELIMITER@@@";
+            emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
         }
         // 获取自动生成的 questionnaire_id
         int questionnaireId = query.lastInsertId().toInt();
@@ -145,6 +147,8 @@ void MyTcpServer::mulTableInsertHandle(QString value1, QString value2, QString v
         QByteArray dataToSend = doc.toJson();
         qDebug() <<"dataToSend" <<dataToSend;
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
         query.clear();
 }
 
@@ -176,6 +180,8 @@ void MyTcpServer::questionUpdateHandle(QString tableName, QString fieldNames, QS
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
 
         qDebug() << query.lastError().text();
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
     else
     {
@@ -187,6 +193,8 @@ void MyTcpServer::questionUpdateHandle(QString tableName, QString fieldNames, QS
         QByteArray dataToSend = doc.toJson();
         qDebug() << "dataToSend" << dataToSend;
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
     query.clear();
 }
@@ -231,6 +239,8 @@ void MyTcpServer::qqInsertHandle(QString messagetype, QString fieldNames, QStrin
                         QJsonDocument doc(messageObject);
                         QByteArray dataToSend = doc.toJson();
                         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+                        QByteArray last = "@@@DELIMITER@@@";
+                        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
                     } else {
                         qDebug() << "Inserted record for student:" << studentUsername << ", QQ ID:" << qqId;
                     }
@@ -243,6 +253,8 @@ void MyTcpServer::qqInsertHandle(QString messagetype, QString fieldNames, QStrin
                 QJsonDocument doc(messageObject);
                 QByteArray dataToSend = doc.toJson();
                 emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+                QByteArray last = "@@@DELIMITER@@@";
+                emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
             }
         }
     } else {
@@ -253,6 +265,8 @@ void MyTcpServer::qqInsertHandle(QString messagetype, QString fieldNames, QStrin
         QJsonDocument doc(messageObject);
         QByteArray dataToSend = doc.toJson();
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
 
     bool state = true;
@@ -263,6 +277,8 @@ void MyTcpServer::qqInsertHandle(QString messagetype, QString fieldNames, QStrin
     QByteArray dataToSend = doc.toJson();
     qDebug() <<"dataToSend" <<dataToSend;
     emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+    QByteArray last = "@@@DELIMITER@@@";
+    emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     query.clear();
 
 }
@@ -287,6 +303,8 @@ void MyTcpServer::studentAnswerHandle(QString messagetype, QString fieldNames, Q
         QJsonDocument doc(messageObject);
         QByteArray dataToSend = doc.toJson();
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
         return;
     }
 
@@ -312,6 +330,8 @@ void MyTcpServer::studentAnswerHandle(QString messagetype, QString fieldNames, Q
             emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
 
             qDebug() << query.lastError().text();
+            QByteArray last = "@@@DELIMITER@@@";
+            emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
             return;
         }
     }
@@ -323,6 +343,8 @@ void MyTcpServer::studentAnswerHandle(QString messagetype, QString fieldNames, Q
     QByteArray dataToSend = doc.toJson();
     qDebug() <<"dataToSend" <<dataToSend;
     emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+    QByteArray last = "@@@DELIMITER@@@";
+    emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
 
 }
 
@@ -362,6 +384,8 @@ void MyTcpServer::questionInsertHandle(QString messagetype, QString fieldNames, 
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
 
         qDebug() << query.lastError().text();
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
     else
     {
@@ -373,6 +397,8 @@ void MyTcpServer::questionInsertHandle(QString messagetype, QString fieldNames, 
         QByteArray dataToSend = doc.toJson();
         qDebug() <<"dataToSend" <<dataToSend;
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
     query.clear();
 }
@@ -398,6 +424,8 @@ void MyTcpServer::questionDelectHandle(QString messagetype, QString registertype
             emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
 
             qDebug() << "questionnairequestion" + query.lastError().text();
+            QByteArray last = "@@@DELIMITER@@@";
+            emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
             return;
         }
         }
@@ -416,6 +444,8 @@ void MyTcpServer::questionDelectHandle(QString messagetype, QString registertype
             QByteArray dataToSend = doc.toJson();
             emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
             qDebug() << "题库删除失败" + query.lastError().text();
+            QByteArray last = "@@@DELIMITER@@@";
+            emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
             return;
         }
         }
@@ -428,6 +458,8 @@ void MyTcpServer::questionDelectHandle(QString messagetype, QString registertype
     QByteArray dataToSend = doc.toJson();
     qDebug() <<"dataToSend" <<dataToSend;
     emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+    QByteArray last = "@@@DELIMITER@@@";
+    emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     query.clear();
 
 }
@@ -455,7 +487,8 @@ void MyTcpServer::delectHandle(QString messagetype, QString registertype, QStrin
                 QJsonDocument doc(messageObject);
                 QByteArray dataToSend = doc.toJson();
                 emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
-
+                QByteArray last = "@@@DELIMITER@@@";
+                emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
                 qDebug() << query.lastError().text();
                 return;
             }
@@ -469,6 +502,8 @@ void MyTcpServer::delectHandle(QString messagetype, QString registertype, QStrin
     QByteArray dataToSend = doc.toJson();
     qDebug() <<"dataToSend" <<dataToSend;
     emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+    QByteArray last = "@@@DELIMITER@@@";
+    emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     query.clear();
 }
 
@@ -568,52 +603,65 @@ void MyTcpServer::infRegHandle(QString messagetype, QString registertype, QStrin
         QThread *thread = socketThreadHash.value(handle);
         QString teacher_username = userThreadHash.value(thread);
         qDebug() << "teacher_username" << teacher_username;
-        query.prepare("SELECT qn.questionnaire_id, qn.title, sa.student_username, st.name AS student_name, qq.question_type, qq.question_id, sa.answer AS student_answer, "
-                              "CASE "
-                              "WHEN qq.question_type = 'MultipleChoice' THEN mc.content "
-                              "WHEN qq.question_type = 'FillInTheBlank' THEN fib.content "
-                              "WHEN qq.question_type = 'TrueOrFalse' THEN tof.content "
-                              "WHEN qq.question_type = 'Discussion' THEN dis.content "
-                              "ELSE NULL "
-                              "END AS content, "
-                              "CASE "
-                              "WHEN qq.question_type = 'MultipleChoice' THEN CONCAT(mc.option_a, '|', mc.option_b, '|', mc.option_c, '|', mc.option_d) "
-                              "ELSE NULL "
-                              "END AS options, "
-                              "CASE "
-                              "WHEN qq.question_type = 'MultipleChoice' THEN mc.answer "
-                              "WHEN qq.question_type = 'FillInTheBlank' THEN fib.answer "
-                              "WHEN qq.question_type = 'TrueOrFalse' THEN tof.answer "
-                              "WHEN qq.question_type = 'Discussion' THEN NULL "
-                              "ELSE NULL "
-                              "END AS answer, "
-                              "total_students.total_count AS total_students, "
-                              "completed_students.completed_count AS completed_students "
-                              "FROM Questionnaire qn "
-                              "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
-                              "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
-                              "JOIN Student st ON sa.student_username = st.username "
-                              "LEFT JOIN MultipleChoice mc ON qq.question_type = 'MultipleChoice' AND qq.question_id = mc.question_id "
-                              "LEFT JOIN FillInTheBlank fib ON qq.question_type = 'FillInTheBlank' AND qq.question_id = fib.question_id "
-                              "LEFT JOIN TrueOrFalse tof ON qq.question_type = 'TrueOrFalse' AND qq.question_id = tof.question_id "
-                              "LEFT JOIN Discussion dis ON qq.question_type = 'Discussion' AND qq.question_id = dis.question_id "
-                              "JOIN (SELECT qn.questionnaire_id, COUNT(DISTINCT sa.student_username) AS total_count "
-                              "FROM Questionnaire qn "
-                              "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
-                              "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
-                              "WHERE qn.teacher_username = :teacher_username "
-                              "GROUP BY qn.questionnaire_id) AS total_students ON qn.questionnaire_id = total_students.questionnaire_id "
-                              "JOIN (SELECT qn.questionnaire_id, COUNT(DISTINCT sa.student_username) AS completed_count "
-                              "FROM Questionnaire qn "
-                              "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
-                              "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
-                              "WHERE qn.teacher_username = :teacher_username AND sa.answer IS NOT NULL "
-                              "GROUP BY qn.questionnaire_id) AS completed_students ON qn.questionnaire_id = completed_students.questionnaire_id "
-                              "WHERE qn.teacher_username = :teacher_username "
-                              "ORDER BY qn.questionnaire_id, FIELD(qq.question_type, 'MultipleChoice', 'FillInTheBlank', 'TrueOrFalse', 'Discussion'), qq.question_id, sa.student_username;");
+
+
+        query.prepare("SELECT qn.questionnaire_id, qn.title, "
+                      "total_students.total_count AS total_students, "
+                      "completed_students.completed_count AS completed_students "
+                      "FROM Questionnaire qn "
+                      "JOIN (SELECT qn.questionnaire_id, COUNT(DISTINCT sa.student_username) AS total_count "
+                      "FROM Questionnaire qn "
+                      "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
+                      "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
+                      " WHERE qn.teacher_username = :teacher_username "
+                      "GROUP BY qn.questionnaire_id) AS total_students ON qn.questionnaire_id = total_students.questionnaire_id "
+                      " JOIN (SELECT qn.questionnaire_id, COUNT(DISTINCT sa.student_username) AS completed_count "
+                      " FROM Questionnaire qn "
+                      "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
+                      "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
+                      "WHERE qn.teacher_username = :teacher_username AND sa.answer IS NOT NULL "
+                      " GROUP BY qn.questionnaire_id) AS completed_students ON qn.questionnaire_id = completed_students.questionnaire_id "
+                      "WHERE qn.teacher_username = :teacher_username "
+                      "ORDER BY qn.questionnaire_id;");
         query.bindValue(":teacher_username", teacher_username);
-
-
+    }
+    else if ("history_questionnair" == messageType)
+    {
+        // 获取 teacher_username
+        QThread *thread = socketThreadHash.value(handle);
+        QString teacher_username = userThreadHash.value(thread);
+        int questionnaire_id = messagetype.toInt();
+        query.prepare("SELECT qn.questionnaire_id, qn.title, sa.student_username, st.name AS student_name, qq.question_type, qq.question_id, sa.answer AS student_answer, "
+                      "CASE "
+                      "WHEN qq.question_type = 'MultipleChoice' THEN mc.content "
+                      "WHEN qq.question_type = 'FillInTheBlank' THEN fb.content "
+                      "WHEN qq.question_type = 'TrueOrFalse' THEN tf.content "
+                      "WHEN qq.question_type = 'Discussion' THEN d.content "
+                      "ELSE NULL "
+                      "END AS content, "
+                      "CASE "
+                      "WHEN qq.question_type = 'MultipleChoice' THEN CONCAT(mc.option_a, '|', mc.option_b, '|', mc.option_c, '|', mc.option_d) "
+                      "ELSE NULL "
+                      "END AS options, "
+                      "CASE "
+                      "WHEN qq.question_type = 'MultipleChoice' THEN mc.answer "
+                      "WHEN qq.question_type = 'FillInTheBlank' THEN fb.answer "
+                      "WHEN qq.question_type = 'TrueOrFalse' THEN tf.answer "
+                      "WHEN qq.question_type = 'Discussion' THEN NULL "
+                      "ELSE NULL "
+                      "END AS answer "
+                      "FROM Questionnaire qn "
+                      "JOIN QuestionnaireQuestion qq ON qn.questionnaire_id = qq.questionnaire_id "
+                      "JOIN StudentAnswer sa ON qq.qq_id = sa.qq_id "
+                      "JOIN Student st ON sa.student_username = st.username "
+                      "LEFT JOIN MultipleChoice mc ON qq.question_type = 'MultipleChoice' AND qq.question_id = mc.question_id "
+                      "LEFT JOIN FillInTheBlank fb ON qq.question_type = 'FillInTheBlank' AND qq.question_id = fb.question_id "
+                      "LEFT JOIN TrueOrFalse tf ON qq.question_type = 'TrueOrFalse' AND qq.question_id = tf.question_id "
+                      "LEFT JOIN Discussion d ON qq.question_type = 'Discussion' AND qq.question_id = d.question_id "
+                      "WHERE qn.teacher_username = :teacher_username AND qn.questionnaire_id = :questionnaire_id "
+                      "ORDER BY qq.question_type, qq.question_id, sa.student_username;");
+        query.bindValue(":teacher_username", teacher_username);
+        query.bindValue(":questionnaire_id", questionnaire_id);
     }
 
     QReadLocker locker(&dbLock);
@@ -635,7 +683,37 @@ void MyTcpServer::infRegHandle(QString messagetype, QString registertype, QStrin
         QJsonDocument doc(messageObject);
         QByteArray dataToSend = doc.toJson();
         qDebug() <<"dataToSend" <<dataToSend << "size:" << dataToSend.size();
-        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+
+        // 分块发送数据
+        const int blockSize = 1024;
+        int dataSize = dataToSend.size();
+        int blocksToSend = dataSize / blockSize + (dataSize % blockSize > 0 ? 1 : 0);
+
+        for (int i = 0; i < blocksToSend; ++i) {
+            //QByteArray block;
+            //QDataStream stream(&block, QIODevice::WriteOnly);
+            //stream.setVersion(QDataStream::Qt_5_10);
+
+            int startPos = i * blockSize;
+            int currentBlockSize = std::min(blockSize, dataSize - startPos);
+            QByteArray currentData = dataToSend.mid(startPos, currentBlockSize);
+
+            // 添加报头（包含数据块大小）
+            //stream << qint32(currentBlockSize);
+            // 添加当前数据块的位置
+           // stream << qint32(i);
+            // 如果是第一个数据块，添加表示所有数据块数量的数字
+           // if (i == 0) {
+           //     stream << qint32(blocksToSend);
+           // }
+            // 添加数据块
+            //stream << currentData;
+
+            // 发送数据块
+            emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(currentData);
+        }
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
     else { // 查询失败
         qDebug() << "Query error:" << query.lastError().text();
@@ -645,6 +723,8 @@ void MyTcpServer::infRegHandle(QString messagetype, QString registertype, QStrin
         QJsonDocument doc(messageObject);
         QByteArray dataToSend = doc.toJson();
         emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(dataToSend);
+        QByteArray last = "@@@DELIMITER@@@";
+        emit threadSqlHash[socketThreadHash[handle]]->sendSiganl(last);
     }
 }
 

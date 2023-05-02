@@ -1,5 +1,5 @@
 ﻿#include <QtCore/QCoreApplication>
-#include "mytcpserver.h"
+#include "MyTcpServer.h"
 
 
 int main(int argc, char *argv[])

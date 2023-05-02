@@ -88,7 +88,7 @@ void mytcpsocket::disconnectedHandle()
 
 void mytcpsocket::sendHandle(QByteArray toSend)
 {
-    qDebug() <<"发送数据";
+    qDebug() <<"发送数据"  << toSend;
     this->write(toSend);
     this->waitForBytesWritten(-1);  //阻塞发送
 }
